@@ -1,4 +1,4 @@
-"""Configures a Kafka Connector for Postgres Station data"""
+"""Configures a Kafka Connector for Postgres Station data by using Kafka Connect"""
 import json
 import logging
 
