@@ -40,33 +40,37 @@ class Producer:
         # If the topic does not already exist, try to create it
         if self.topic_name not in Producer.existing_topics:
             self.create_topic()
-            Producer.existing_topics.add(self.topic_name)
-
+            
         # Configure the AvroProducer
         schema_registry = CachedSchemaRegistryClient({"url": self.broker_properties['SCHEMA_REGISTRY_URL'] })
         self.producer = AvroProducer(self.broker_properties['config'], schema_registry=schema_registry)
 
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
-        #
-        #
-        # TODO: Write code that creates the topic for this producer if it does not already exist on
-        # the Kafka Broker.
-        #
-        #
-        logger.info("topic creation kafka integration incomplete - skipping")
+        # Write code that creates the topic for this producer if it does not already exist on
+        # the Kafka Broker.#
+        logger.info("A new topic will be created.")
+        topic = NewTopic(
+            topic = self.topic_name, 
+            num_partitions = self.num_partitions, 
+            replication_factor = self.num_replicas)
+        client = AdminClient(self.broker_properties['config'])
+        result = client.create_topics([topic])
+        for topic, f in result.items():
+            try:
+                f.result()  # The result itself is None
+                logger.info("Topic '{}' created".format(topic))
+                Producer.existing_topics.add(self.topic_name)
+            except Exception as exception:
+                logger.error("Failed to create topic {}: {}".format(topic, exception))
 
     def time_millis(self):
         return int(round(time.time() * 1000))
 
     def close(self):
         """Prepares the producer for exit by cleaning up the producer"""
-        #
-        #
-        # TODO: Write cleanup code for the Producer here
-        #
-        #
-        logger.info("producer close incomplete - skipping")
+        # A synchronous operation - (from Doc) Wait for all messages in the Producer queue to be delivered
+        self.producer.flush()
 
     def time_millis(self):
         """Use this function to get the key for Kafka Events"""

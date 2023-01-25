@@ -6,9 +6,3 @@ broker_properties = {
 }
 
 print(broker_properties['config']['BROKER_URL'])
-
-
-
-schema_registry = CachedSchemaRegistryClient({"url": self.schema_registry_url })
-producer = AvroProducer(self.config, schema_registry=schema_registry)
-broker_properties['config']
