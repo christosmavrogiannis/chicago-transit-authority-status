@@ -3,14 +3,14 @@ import logging
 import time
 from confluent_kafka import avro
 from confluent_kafka.admin import AdminClient, NewTopic
-from confluent_kafka.avro import AvroProducer
+from confluent_kafka.avro import AvroProducer, CachedSchemaRegistryClient
 
 logger = logging.getLogger(__name__)
 
 class Producer:
     """Defines and provides common functionality amongst Producers"""
 
-    # Tracks existing topics across all Producer instances
+    # Tracks existing topics across all Producer instances, kind of static variable
     existing_topics = set([])
 
     def __init__(
@@ -43,7 +43,8 @@ class Producer:
             Producer.existing_topics.add(self.topic_name)
 
         # Configure the AvroProducer
-        self.producer = AvroProducer()
+        schema_registry = CachedSchemaRegistryClient({"url": self.broker_properties['SCHEMA_REGISTRY_URL'] })
+        self.producer = AvroProducer(self.broker_properties['config'], schema_registry=schema_registry)
 
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
