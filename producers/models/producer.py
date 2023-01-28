@@ -64,6 +64,10 @@ class Producer:
             except Exception as exception:
                 logger.error("Failed to create topic {}: {}".format(topic, exception))
 
+    def delete_topic(self):
+        logger.info("The topic '{}' will now be deleted.".format(self.topic_name))
+        self.client.delete_topics([self.topic_name])
+
     def time_millis(self):
         return int(round(time.time() * 1000))
 
@@ -71,6 +75,7 @@ class Producer:
         """Prepares the producer for exit by cleaning up the producer"""
         # A synchronous operation - (from Doc) Wait for all messages in the Producer queue to be delivered
         self.producer.flush()
+        self.delete_topic()
 
     def time_millis(self):
         """Use this function to get the key for Kafka Events"""
