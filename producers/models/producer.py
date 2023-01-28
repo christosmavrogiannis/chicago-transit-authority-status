@@ -32,7 +32,7 @@ class Producer:
         # and use the Host URL for Kafka and Schema Registry!
         self.broker_properties = {
             "config": {
-                "BROKER_URL" : "PLAINTEXT://localhost:9093"
+                "bootstrap.servers" : "PLAINTEXT://localhost:9093"
             },
             "SCHEMA_REGISTRY_URL" : "http://localhost:8081"    
         }
