@@ -43,6 +43,17 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9092"
       SCHEMA_REGISTRY_LISTENERS: "http://schema-registry:8081"
   
+  schema-registry-ui:
+    image: landoop/schema-registry-ui
+    ports:
+    - "8086:8086"
+    environment:
+      PORT: "8086"
+      PROXY: "true"
+      SCHEMAREGISTRY_URL: "http://schema-registry:8081/"
+    depends_on:
+    - "schema-registry"
+
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     ports:

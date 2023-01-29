@@ -70,9 +70,11 @@ class TimeSimulation:
         try:
             while True:
                 logger.debug("simulation running: %s", curr_time.isoformat())
-                # Send weather on the top of the hour
-                if curr_time.minute == 0:
-                    weather.run(curr_time.month)
+                # TODO: uncomment the next two lines after finished with the connector (Kafka Connect)
+                # Send weather on the top of the hour -- this is a comment
+                # if curr_time.minute == 0:
+                    # weather.run(curr_time.month)
+                
                 _ = [line.run(curr_time, self.time_step) for line in self.train_lines]
                 curr_time = curr_time + self.time_step
                 time.sleep(self.sleep_seconds)
