@@ -39,7 +39,7 @@ class Turnstile(Producer):
         value = {
             "station_id" : self.station.station_id,
             "station_name" :  self.station.name,
-            "line" : self.color.value # TODO: fix this
+            "line" : self.station.color
         }
 
         self.producer.produce(
