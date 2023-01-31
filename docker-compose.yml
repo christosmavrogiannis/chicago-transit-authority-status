@@ -53,6 +53,30 @@ services:
       SCHEMAREGISTRY_URL: "http://schema-registry:8081/"
     depends_on:
     - "schema-registry"
+  
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:latest
+    ports:
+    - "8082:8082"
+    environment:
+      KAFKA_REST_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9092"
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082/"
+      KAFKA_REST_HOST_NAME: "rest-proxy"
+      KAFKA_REST_SCHEMA_REGISTRY_URL: "http://schema-registry:8081/"
+    depends_on:
+    - "kafka"
+    - "schema-registry"
+
+  topics-ui:
+    image: landoop/kafka-topics-ui:latest
+    ports:
+    - "8085:8085"
+    environment:
+      PORT: "8085"
+      PROXY: "true"
+      KAFKA_REST_PROXY_URL: "http://rest-proxy:8082"
+    depends_on:
+    - "rest-proxy"
 
   connect:
     image: confluentinc/cp-kafka-connect:latest
