@@ -22,4 +22,4 @@ COPY stations(
   red,
   blue,
   green
-) FROM '/producers/data/cta_stations.csv' DELIMITER ',' CSV HEADER;
+) FROM '/tmp/cta_stations.csv' DELIMITER ',' CSV HEADER;
