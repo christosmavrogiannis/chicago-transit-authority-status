@@ -16,3 +16,12 @@ print(type(key_schema))
 
 key_schema_in_string=json.dumps(key_schema)
 print(type(key_schema_in_string))
+
+
+
+from enum import IntEnum
+statuses = IntEnum(
+    "status", "sunny partly_cloudy cloudy windy precipitation", start=0
+)
+
+status = statuses.sunny
