@@ -30,7 +30,7 @@ class Weather(Producer):
     summer_months = set((6, 7, 8))
 
     def __init__(self, month):
-        topic_name="weather", # TODO: Come up with a better topic name
+        topic_name="weather" # TODO: Come up with a better topic name
         super().__init__(
             topic_name,
             key_schema=Weather.key_schema,
