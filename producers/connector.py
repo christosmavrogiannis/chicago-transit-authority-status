@@ -1,13 +1,9 @@
 """Configures a Kafka Connector for Postgres Station data by using Kafka Connect"""
 import json
 import logging
-
 import requests
 
-
 logger = logging.getLogger(__name__)
-
-
 KAFKA_CONNECT_URL = "http://localhost:8083/connectors"
 CONNECTOR_NAME = "stations"
 
@@ -39,10 +35,10 @@ def configure_connector():
                 "mode": "incrementing",
                 "table.whitelist": "stations",
                 "incrementing.column.name": "stop_id",
-                "connection.url": "jdbc:postgresql://localhost:5433/cta",
+                "connection.url": "jdbc:postgresql://postgres:5432/cta",
                 "connection.user": "cta_admin",
                 "connection.password": "chicago",
-                "poll.interval.ms": "60000"
+                "poll.interval.ms": "3600000"  # 1 hour   
             }
        }),
     )
