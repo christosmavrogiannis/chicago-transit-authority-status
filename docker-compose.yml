@@ -79,7 +79,7 @@ services:
     - "rest-proxy"
 
   connect:
-    image: confluentinc/cp-kafka-connect:latest
+    image: confluentinc/cp-kafka-connect:5.2.2
     ports:
     - "8083:8083"
     environment:
