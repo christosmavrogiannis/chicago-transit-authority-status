@@ -1,13 +1,13 @@
 """Defines trends calculations for stations"""
 import logging
-
 import faust
-
+from dataclasses import asdict, dataclass
 
 logger = logging.getLogger(__name__)
 
 
 # Faust will ingest records from Kafka in this format
+@dataclass
 class Station(faust.Record):
     stop_id: int
     direction_id: str
@@ -21,6 +21,7 @@ class Station(faust.Record):
     green: bool
 
 
+@dataclass
 # Faust will produce records to Kafka in this format
 class TransformedStation(faust.Record):
     station_id: int
@@ -28,30 +29,46 @@ class TransformedStation(faust.Record):
     order: int
     line: str
 
+def transform_station_info(station):
+    logger.info("--------")
+    message= f"Station id : '{station.station_id}' - station name: '{station.station_name}'"
+    logger.info(message)
+    
+    line = ''
+    if station.red:
+        line = 'red'
+    if station.blue:
+        line = 'blue'
+    if station.green:
+        line = 'green'
+  
+    transformed_station = TransformedStation(station.station_id, station.station_name, station.order, line)
+  
+    return transformed_station
 
-# TODO: Define a Faust Stream that ingests data from the Kafka Connect stations topic and
-#   places it into a new topic with only the necessary information.
+# Define a Faust Stream that ingests data from the Kafka Connect stations topic and
+# places it into a new topic with only the necessary information.
 app = faust.App("stations-stream", broker="kafka://localhost:9093", store="memory://")
 # Define the input Kafka Topic to which Kafka Connect outputs
 topic = app.topic("connect-stations", value_type=Station)
 # Define the output Kafka Topic
-out_topic = app.topic("connect-stations-transformed", partitions=1)
-# Define a Faust Table
-#table = app.Table(
-#    # "TODO",
-#    # default=TODO,
-#    partitions=1,
-#    changelog_topic=out_topic,
-#)
+out_topic = app.topic("connect-stations-transformed", partitions=1,  value_type=TransformedStation)
 
 
-#
-#
-# TODO: Using Faust, transform input `Station` records into `TransformedStation` records. Note that
+
+# Transform input `Station` records into `TransformedStation` records. Note that
 # "line" is the color of the station. So if the `Station` record has the field `red` set to true,
 # then you would set the `line` of the `TransformedStation` record to the string `"red"`
-#
-#
+
+@app.agent(topic)
+async def station_event(station_stream):
+    
+    station_stream.add_processor(transform_station_info)
+    
+    async for transformed_station in station_stream:
+        logger.info(type(transformed_station))
+        await out_topic.send(value=transformed_station)
+
 
 
 if __name__ == "__main__":
