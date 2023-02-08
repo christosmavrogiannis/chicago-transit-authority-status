@@ -69,7 +69,5 @@ async def station_event(station_stream):
         logger.info(type(transformed_station))
         await out_topic.send(value=transformed_station)
 
-
-
 if __name__ == "__main__":
     app.main()
