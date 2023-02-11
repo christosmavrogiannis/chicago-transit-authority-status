@@ -50,7 +50,7 @@ def transform_station_info(station):
 # places it into a new topic with only the necessary information.
 app = faust.App("stations-stream", broker="kafka://localhost:9093", store="memory://")
 # Define the input Kafka Topic to which Kafka Connect outputs
-topic = app.topic("connect-stations", value_type=Station)
+topic = app.topic("org.chicago.cta.postgres.stations", value_type=Station)
 # Define the output Kafka Topic
 out_topic = app.topic("org.chicago.cta.stations.table.v1", partitions=1,  value_type=TransformedStation)
 
