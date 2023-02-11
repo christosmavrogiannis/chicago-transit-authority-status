@@ -30,7 +30,15 @@ class Weather(Producer):
     summer_months = set((6, 7, 8))
 
     def __init__(self, month):
-        topic_name="weather" # TODO: Come up with a better topic name
+        if Weather.key_schema is None:
+            with open(f"{Path(__file__).parents[0]}/schemas/weather_key.json") as f:
+                Weather.key_schema = json.load(f)
+        
+        if Weather.value_schema is None:
+            with open(f"{Path(__file__).parents[0]}/schemas/weather_value.json") as f:
+                Weather.value_schema = json.load(f)
+        
+        topic_name = f"{Weather.key_schema.namespace}.weather.v1" # org.chicago.cta.weather.v1"
         super().__init__(
             topic_name,
             key_schema=Weather.key_schema,
@@ -45,14 +53,6 @@ class Weather(Producer):
             self.temp = 40.0
         elif month in Weather.summer_months:
             self.temp = 85.0
-
-        if Weather.key_schema is None:
-            with open(f"{Path(__file__).parents[0]}/schemas/weather_key.json") as f:
-                Weather.key_schema = json.load(f)
-        
-        if Weather.value_schema is None:
-            with open(f"{Path(__file__).parents[0]}/schemas/weather_value.json") as f:
-                Weather.value_schema = json.load(f)
 
     def _set_weather(self, month):
         """Returns the current weather"""
