@@ -26,7 +26,7 @@ CREATE TABLE turnstile
 
 CREATE TABLE turnstile_summary
     WITH (value_format = 'JSON') AS
-    SELECT station_id, SUM(station_count) AS count FROM turnstile GROUP BY station_id;
+    SELECT station_id, COUNT(station_id) AS count FROM turnstile GROUP BY station_id;
 """
 
 def execute_statement():

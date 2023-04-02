@@ -54,6 +54,9 @@ topic = app.topic("org.chicago.cta.postgres.stations", value_type=Station)
 # Define the output Kafka Topic
 out_topic = app.topic("org.chicago.cta.stations.table.v1", partitions=1,  value_type=TransformedStation)
 
+table = app.Table(
+    "transformed_stations",
+    default=int)
 
 
 # Transform input `Station` records into `TransformedStation` records. Note that
@@ -62,12 +65,10 @@ out_topic = app.topic("org.chicago.cta.stations.table.v1", partitions=1,  value_
 
 @app.agent(topic)
 async def station_event(station_stream):
-    
-    station_stream.add_processor(transform_station_info)
-    
-    async for transformed_station in station_stream:
-        logger.info(type(transformed_station))
-        await out_topic.send(value=transformed_station)
+    async for station in station_stream:
+        logger.info(type(station))
+        table[station.station_id] = transform_station_info(station)
+
 
 if __name__ == "__main__":
     app.main()
