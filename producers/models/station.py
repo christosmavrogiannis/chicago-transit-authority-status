@@ -47,7 +47,6 @@ class Station(Producer):
 
     def run(self, train, direction, prev_station_id, prev_direction):
         """Simulates train arrivals at this station"""
-        logger.info("arrival kafka integration incomplete - skipping")
         if prev_station_id is None:
             prev_station_id = 0
         if prev_direction is None:
@@ -57,7 +56,7 @@ class Station(Producer):
             "train_id" : train.train_id,
             "direction" : direction,
             "line" : self.color.name,
-            "train_status" : train.status,
+            "train_status" : train.status.name,
             "prev_station_id" : prev_station_id,
             "prev_direction" : prev_direction
         }
