@@ -31,7 +31,7 @@ class KafkaConsumer:
         self.offset_earliest = offset_earliest
 
         self.broker_properties = {
-            "bootstrap.servers" : "PLAINTEXT://localhost:9093",
+            "bootstrap.servers" : "PLAINTEXT://localhost:9092",
             "group.id": "first-python-consumer-group",
             "auto.offset.reset": "earliest" if offset_earliest else "latest"
         }

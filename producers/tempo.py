@@ -1,6 +1,6 @@
 broker_properties = {
     "config": {
-        "BROKER_URL" : "PLAINTEXT://localhost:9093"
+        "BROKER_URL" : "PLAINTEXT://localhost:9092"
     },
     "SCHEMA_REGISTRY_URL" : "http://localhost:8081"
 }
