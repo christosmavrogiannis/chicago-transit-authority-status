@@ -67,7 +67,6 @@ class Weather(Producer):
     def run(self, month):
         self._set_weather(month)
         
-        logger.info("weather kafka proxy integration incomplete - skipping")
         headers = {"Content-Type": "application/vnd.kafka.avro.v2+json"}
         value = {
             "temperature": self.temp,
@@ -76,7 +75,9 @@ class Weather(Producer):
         data = {
             "key_schema": json.dumps(Weather.key_schema), 
             "value_schema": json.dumps(Weather.value_schema), 
-            "records": [{
+            "records": [
+            {
+                "key": { "timestamp": self.time_millis()},
                 "value": value
             }]
         }
